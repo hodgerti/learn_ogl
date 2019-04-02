@@ -1,0 +1,7 @@
+﻿  Building Custom Rule D:/Documents/learn_ogl/master/learn_ogl/glfw-3.2.1/tests/CMakeLists.txt
+  CMake does not need to re-run because D:/Documents/learn_ogl/master/learn_ogl/glfw-3.2.1/build/tests/CMakeFiles/generate.stamp is up-to-date.
+  reopen.c
+  glad.c
+  Generating Code...
+  reopen.vcxproj -> D:\Documents\learn_ogl\master\learn_ogl\glfw-3.2.1\build\tests\Debug\reopen.exe
+  reopen.vcxproj -> D:/Documents/learn_ogl/master/learn_ogl/glfw-3.2.1/build/tests/Debug/reopen.pdb (Full PDB)

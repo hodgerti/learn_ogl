@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\Documents\learn_ogl\master\learn_ogl\glfw-3.2.1\build\CMakeFiles\934d85b0e1ad846b2f04e5ac35163bcf\uninstall.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Documents\learn_ogl\master\learn_ogl\glfw-3.2.1\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Documents\learn_ogl\master\learn_ogl\glfw-3.2.1\build\CMakeFiles\uninstall" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{84E9B09D-B1B7-37C8-B5B2-5B679EB33EC9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
