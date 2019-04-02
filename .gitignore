@@ -8,3 +8,6 @@
 *.so
 *.dll
 *.dylib
+
+# glfw
+glfw-3.2.1/build/*
