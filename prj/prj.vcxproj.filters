@@ -1,28 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{5cdab7cc-3eb9-4b33-b547-9d36ea3bfc72}</UniqueIdentifier>
     </Filter>
     <Filter Include="GLFW">
       <UniqueIdentifier>{2d7df31e-8a6f-4942-971a-033f64b5e23f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\glad">
+      <UniqueIdentifier>{ebebf3d5-ff8a-492a-a966-1ebd839f7098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\glfw_help">
+      <UniqueIdentifier>{6f266677-5cce-4726-a26c-2445cbb1e067}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\glad\glad.c">
+      <Filter>src\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\glfw_help\glfw_helper.cpp">
+      <Filter>src\glfw_help</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +31,9 @@
     </ClInclude>
     <ClInclude Include="..\ext\Include\GLFW\glfw3native.h">
       <Filter>GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\glfw_help\glfw_helper.h">
+      <Filter>src\glfw_help</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
