@@ -21,9 +21,8 @@ struct key_handle
 {
 	int				key_id;
 	int				key_name;
-	unsigned int	clicked;
+	unsigned int	clicks;
 	bool			pressed;
-	bool			unpressed;
 };
 
 #define DFLT_KEYS_SIZE		16
@@ -46,12 +45,16 @@ class GLFWInputHandler
 
 	void set_window(GLFWwindow *in_window);
 
-	int  get_clicks();
-	bool get_pressed();
-	bool get_unpressed();
+	int  get_clicks(int key_id);
+	bool pop_click(int key_id);
+	int  clear_clicks(int key_id);
+	bool check_pressed(int key_id);
+	bool check_unpressed(int key_id);
 
 	void update();
+	// Add a key track
 	void add_key(int key_id, int key_name);
+	// Remove a key track. Doesn't unallocate any memory.
 	void remove_key(int key_id);
 
 };

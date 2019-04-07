@@ -38,6 +38,22 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 /*-----------------------------
+- Process inputs
+-------------------------------*/
+void process_inputs()
+{
+	input_handler.update();
+	if(input_handler.check_pressed(GLFW_KEY_ESCAPE))
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
+	if(input_handler.get_clicks(GLFW_KEY_P) > 4)
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
+}
+
+/*-----------------------------
 - Initialize window/context
 - and anything else that needs it
 -------------------------------*/
@@ -62,8 +78,8 @@ int init()
 
 	
 	input_handler.set_window(window);
-	input_handler.add_key(50, GLFW_KEY_SPACE);
-	input_handler.remove_key(50);
+	input_handler.add_key(GLFW_KEY_ESCAPE, GLFW_KEY_ESCAPE);
+	input_handler.add_key(GLFW_KEY_P, GLFW_KEY_P);
 
 	return 0;
 }
@@ -84,10 +100,17 @@ int render_loop()
 {
 	while(!glfwWindowShouldClose(window))
 	{
-		// swap color buffer
-		glfwSwapBuffers(window);
+		// input
+		process_inputs();
+
+		// rendering calls here
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		
 		// check if any events are triggered, call needed callbacks, and update window state
 		glfwPollEvents();
+		// swap color buffer
+		glfwSwapBuffers(window);
 	}
 
 	stop();

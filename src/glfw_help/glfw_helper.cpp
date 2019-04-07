@@ -67,33 +67,92 @@ void GLFWInputHandler::set_window(GLFWwindow *in_window)
 	window = in_window;
 }
 
-int GLFWInputHandler::get_clicks()
+int GLFWInputHandler::clear_clicks(int key_id)
 {
-	return 0;
+	for( int i = 0; i < keys_sz; i++ )
+	{
+		if (keys[i]->key_id == key_id)
+		{
+			int num_clicks = keys[i]->clicks;
+			keys[i]->clicks = 0;
+			return num_clicks;
+		}
+	}
+	return NO_KEY_ID;
 }
 
-bool GLFWInputHandler::get_pressed()
+int GLFWInputHandler::get_clicks(int key_id)
 {
-	return 0;
+	for( int i = 0; i < keys_sz; i++ )
+	{
+		if (keys[i]->key_id == key_id)
+		{
+			return keys[i]->clicks;
+		}
+	}
+	return NO_KEY_ID;
 }
 
-bool GLFWInputHandler::get_unpressed()
+bool GLFWInputHandler::pop_click(int key_id)
 {
-	return 0;
+	for( int i = 0; i < keys_sz; i++ )
+	{
+		if (keys[i]->key_id == key_id)
+		{
+			if(keys[i]->clicks > 0)
+			{
+				keys[i]->clicks--;
+				return true;
+			}
+			return false;
+		}
+	}
+	return false;
+}
+
+bool GLFWInputHandler::check_pressed(int key_id)
+{
+	for( int i = 0; i < keys_sz; i++ )
+	{
+		if (keys[i]->key_id == key_id)
+		{
+			return keys[i]->pressed;
+		}
+	}
+}
+
+bool GLFWInputHandler::check_unpressed(int key_id)
+{
+	for( int i = 0; i < keys_sz; i++ )
+	{
+		if (keys[i]->key_id == key_id)
+		{
+			return !keys[i]->pressed;
+		}
+	}
 }
 
 void GLFWInputHandler::update()
 {
-
+	for(int i = 0; i < keys_sz; i++)
+	{
+		char press_result = glfwGetKey(window, keys[i]->key_name);
+		// check for key click
+		if( (press_result == GLFW_PRESS)
+		    && !(keys[i]->pressed) )
+		{
+			keys[i]->clicks++;
+		}
+		keys[i]->pressed = press_result == GLFW_PRESS;
+	}
 }
 
 void GLFWInputHandler::init_key(key_handle *key, int key_id, int key_name)
 {
 	key->key_id = key_id;
 	key->key_name = key_name;
-	key->clicked = 0;
+	key->clicks = 0;
 	key->pressed = false;
-	key->unpressed = false;
 }
 
 void GLFWInputHandler::add_key(int key_id, int key_name)
@@ -113,9 +172,10 @@ void GLFWInputHandler::add_key(int key_id, int key_name)
 	{
 		new_handle[i] = keys[i];
 	}
-	for( int i = 0; i > DFLT_KEYS_SIZE; i++ )
+	for( int i = 0; i < DFLT_KEYS_SIZE; i++ )
 	{
-		keys[keys_sz + i] = new key_handle;
+		new_handle[keys_sz + i] = new key_handle;
+		init_key(new_handle[keys_sz + i], NO_KEY_ID, NO_KEY_ID);
 	}
 	delete [] keys;
 	keys_sz += DFLT_KEYS_SIZE;
