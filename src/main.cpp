@@ -25,7 +25,8 @@
 /************************************
 * Global variables
 *************************************/
-GLFWwindow *window = NULL;
+GLFWwindow *window;
+GLFWInputHandler input_handler;
 
 /************************************
 * Callbacks
@@ -58,6 +59,11 @@ int init()
 	// set window resizing callback
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); 
+
+	
+	input_handler.set_window(window);
+	input_handler.add_key(50, GLFW_KEY_SPACE);
+	input_handler.remove_key(50);
 
 	return 0;
 }
