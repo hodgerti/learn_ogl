@@ -119,6 +119,7 @@ bool GLFWInputHandler::check_pressed(int key_id)
 			return keys[i]->pressed;
 		}
 	}
+	return false;
 }
 
 bool GLFWInputHandler::check_unpressed(int key_id)
@@ -130,6 +131,7 @@ bool GLFWInputHandler::check_unpressed(int key_id)
 			return !keys[i]->pressed;
 		}
 	}
+	return false;
 }
 
 void GLFWInputHandler::update()

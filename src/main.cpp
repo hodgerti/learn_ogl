@@ -8,8 +8,11 @@
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 #include <glfw_help/glfw_helper.h>
+#include <geometry/geometry.h>
+#include <shaders/shaders.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 
 /************************************
 * Types
@@ -53,6 +56,8 @@ void process_inputs()
 	}
 }
 
+
+
 /*-----------------------------
 - Initialize window/context
 - and anything else that needs it
@@ -76,10 +81,23 @@ int init()
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); 
 
-	
+	// setup keys
 	input_handler.set_window(window);
 	input_handler.add_key(GLFW_KEY_ESCAPE, GLFW_KEY_ESCAPE);
 	input_handler.add_key(GLFW_KEY_P, GLFW_KEY_P);
+
+	// set up shaders
+	unsigned int vertex_shader, fragment_shader, shader_program;
+	compile_shaders(&vertex_shader, &fragment_shader);
+	unsigned int shaders[] = {vertex_shader, fragment_shader};
+	link_shaders(&shader_program, shaders, 2);
+	glUseProgram(shader_program);
+
+	// set up VBOs
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_vertices), triangle_vertices, GL_STATIC_DRAW);
 
 	return 0;
 }
@@ -106,6 +124,7 @@ int render_loop()
 		// rendering calls here
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
 		
 		// check if any events are triggered, call needed callbacks, and update window state
 		glfwPollEvents();
