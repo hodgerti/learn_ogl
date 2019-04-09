@@ -13,6 +13,21 @@
     <Filter Include="src\glfw_help">
       <UniqueIdentifier>{6f266677-5cce-4726-a26c-2445cbb1e067}</UniqueIdentifier>
     </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{803f8284-8301-4ff6-ad0b-c33de4b74f12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{c93d28be-cac8-4338-878a-65d6c46c968f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\vertex_shaders">
+      <UniqueIdentifier>{e4e3f50d-ffca-43ef-b21c-52edb9f9227b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\geometry_shaders">
+      <UniqueIdentifier>{fd7a4089-57b0-4264-a556-30ffb00b9eaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\fragment_shaders">
+      <UniqueIdentifier>{39b9dbd0-04a0-4ef9-b904-4f176e5b264d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -23,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="..\src\glfw_help\glfw_helper.cpp">
       <Filter>src\glfw_help</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\shaders\shaders.cpp">
+      <Filter>shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,5 +53,16 @@
     <ClInclude Include="..\src\glfw_help\glfw_helper.h">
       <Filter>src\glfw_help</Filter>
     </ClInclude>
+    <ClInclude Include="..\ext\Include\geometry\geometry.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\shaders\shaders.h">
+      <Filter>shaders</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\shaders\vertex_shaders\triangle.vs">
+      <Filter>shaders\vertex_shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -28,8 +28,11 @@
 /************************************
 * Global variables
 *************************************/
-GLFWwindow *window;
-GLFWInputHandler input_handler;
+GLFWwindow			*window;
+GLFWInputHandler	input_handler;
+
+unsigned int	shader_program;
+unsigned int	VBO, EBO, VAO;
 
 /************************************
 * Callbacks
@@ -87,17 +90,29 @@ int init()
 	input_handler.add_key(GLFW_KEY_P, GLFW_KEY_P);
 
 	// set up shaders
-	unsigned int vertex_shader, fragment_shader, shader_program;
+	unsigned int vertex_shader, fragment_shader;
 	compile_shaders(&vertex_shader, &fragment_shader);
 	unsigned int shaders[] = {vertex_shader, fragment_shader};
 	link_shaders(&shader_program, shaders, 2);
-	glUseProgram(shader_program);
+	glDeleteShader(vertex_shader);
+	glDeleteShader(fragment_shader); 
 
-	// set up VBOs
-	unsigned int VBO;
+	// set up VAOs
+	glGenVertexArrays(1, &VAO);  
+
 	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_vertices), triangle_vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle_vertices), rectangle_vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangle_indices), rectangle_indices, GL_STATIC_DRAW);
+	glVertexAttribPointer(VERT_SHADER_LOCATION, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+	glEnableVertexAttribArray(VERT_SHADER_LOCATION);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return 0;
 }
@@ -122,8 +137,18 @@ int render_loop()
 		process_inputs();
 
 		// rendering calls here
+		//  --------
+
+		// clear
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// draw rectangle
+		glUseProgram(shader_program);
+		glBindVertexArray(VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 
 		
 		// check if any events are triggered, call needed callbacks, and update window state

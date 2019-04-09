@@ -122,11 +122,17 @@
     <ClCompile Include="..\src\glad\glad.c" />
     <ClCompile Include="..\src\glfw_help\glfw_helper.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\shaders\shaders.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ext\Include\geometry\geometry.h" />
     <ClInclude Include="..\ext\Include\GLFW\glfw3.h" />
     <ClInclude Include="..\ext\Include\GLFW\glfw3native.h" />
     <ClInclude Include="..\src\glfw_help\glfw_helper.h" />
+    <ClInclude Include="..\src\shaders\shaders.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\shaders\vertex_shaders\triangle.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
