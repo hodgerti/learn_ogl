@@ -22,7 +22,81 @@ const char *fragment_shader_source = "#version 330 core\n"
 /************************************
 * Functions
 *************************************/
-void check_shader_compile(unsigned int shader)
+Shader::Shader()
+{
+
+}
+
+Shader::Shader(const char* vertex_path, const char* fragment_path)
+{
+	set_shaders(vertex_path, fragment_path);
+}
+
+Shader::~Shader()
+{
+	delete [] vert_path;
+	delete [] frag_path;
+}
+
+void Shader::set_shaders(const char* vertex_path, const char* fragment_path)
+{
+	int vert_len = strlen(vertex_path) + 1;
+	int frag_len = strlen(fragment_path) + 1;
+	vert_path = new char[vert_len];
+	frag_path = new char[frag_len];
+	strcpy_s(vert_path, vert_len, vertex_path);
+	strcpy_s(frag_path, frag_len, fragment_path);
+
+	compile_shaders();
+	link_shaders();
+
+	glDeleteShader(vert);
+	glDeleteShader(frag); 
+}
+
+void Shader::read_shader_file(char *path, char **source)
+{
+	FILE *fp;
+
+	fopen_s(&fp, path, "r");
+	fseek(fp, 0L, SEEK_END);
+	int sz = ftell(fp);
+	rewind(fp);
+	*source = new char[sz];
+	fgets(*source, sz, (FILE*)fp); 
+	fclose(fp);
+}
+
+void Shader::compile_shaders()
+{
+	char *vert_src = NULL;
+	char *frag_src = NULL;
+
+	read_shader_file(vert_path, &vert_src);
+	vert = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vert, 1, &vert_src, NULL);
+	glCompileShader(vert);
+	check_shader_compile(vert);
+	delete [] vert_src;
+
+	read_shader_file(frag_path, &frag_src);
+	frag = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(frag, 1, &frag_src, NULL);
+	glCompileShader(frag);
+	check_shader_compile(frag);	
+	delete [] frag_src;
+}
+
+void Shader::link_shaders()
+{
+	program = glCreateProgram();
+	glAttachShader(program, vert);
+	glAttachShader(program, frag);
+	glLinkProgram(program);
+	check_shader_program(program);
+}
+
+void Shader::check_shader_compile(unsigned int shader)
 {
 	int  success;
 	char info_log[512];
@@ -34,47 +108,34 @@ void check_shader_compile(unsigned int shader)
 	}
 }
 
-void check_shader_program(unsigned int shader_program)
+void Shader::check_shader_program(unsigned int program)
 {
 	int  success;
 	char info_log[512];
-	glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
+	glGetProgramiv(program, GL_LINK_STATUS, &success);
 	if(!success)
 	{
-		glGetProgramInfoLog(shader_program, 512, NULL, info_log);
+		glGetProgramInfoLog(program, 512, NULL, info_log);
 		std::cout << "ERROR::SHADER_PROGRAM::LINK_FAILED\n" << info_log << std::endl;
 	}
 }
 
-void compile_shaders
-(
-	unsigned int *vertex_shader, 
-	unsigned int *fragment_shader
-)
+void Shader::use()
 {
-	*vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(*vertex_shader, 1, &vertex_shader_source, NULL);
-	glCompileShader(*vertex_shader);
-	check_shader_compile(*vertex_shader);
-
-	*fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(*fragment_shader, 1, &fragment_shader_source, NULL);
-	glCompileShader(*fragment_shader);
-	check_shader_compile(*fragment_shader);
+	glUseProgram(program);
 }
 
-void link_shaders
-(
-	unsigned int *shader_program,
-	unsigned int *shaders,
-	int			  num_shaders
-)
+unsigned int Shader::get_vert()
 {
-	*shader_program = glCreateProgram();
-	for(int i = 0; i < num_shaders; i++)
-	{
-		glAttachShader(*shader_program, shaders[i]);
-	}
-	glLinkProgram(*shader_program);
-	check_shader_program(*shader_program);
+	return vert;
+}
+
+unsigned int Shader::get_frag()
+{
+	return frag;
+}
+
+unsigned int Shader::get_program()
+{
+	return program;
 }

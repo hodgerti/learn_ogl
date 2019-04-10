@@ -61,8 +61,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\shaders\vertex_shaders\triangle.vs">
+    <None Include="..\src\shaders\vertex_shaders\basic.vert">
       <Filter>shaders\vertex_shaders</Filter>
+    </None>
+    <None Include="..\src\shaders\fragment_shaders\basic.frag">
+      <Filter>shaders\fragment_shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

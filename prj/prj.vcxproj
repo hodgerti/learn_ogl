@@ -78,6 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>PROJECT_DIR="$(ProjectDir.Replace('\', '/'))";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -132,7 +133,8 @@
     <ClInclude Include="..\src\shaders\shaders.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\shaders\vertex_shaders\triangle.vs" />
+    <None Include="..\src\shaders\fragment_shaders\basic.frag" />
+    <None Include="..\src\shaders\vertex_shaders\basic.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

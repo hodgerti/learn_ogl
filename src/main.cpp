@@ -30,9 +30,8 @@
 *************************************/
 GLFWwindow			*window;
 GLFWInputHandler	input_handler;
-
-unsigned int	shader_program;
-unsigned int	VBO, EBO, VAO;
+Shader			    shader;
+unsigned int		VBO, EBO, VAO;
 
 /************************************
 * Callbacks
@@ -90,12 +89,7 @@ int init()
 	input_handler.add_key(GLFW_KEY_P, GLFW_KEY_P);
 
 	// set up shaders
-	unsigned int vertex_shader, fragment_shader;
-	compile_shaders(&vertex_shader, &fragment_shader);
-	unsigned int shaders[] = {vertex_shader, fragment_shader};
-	link_shaders(&shader_program, shaders, 2);
-	glDeleteShader(vertex_shader);
-	glDeleteShader(fragment_shader); 
+	shader.set_shaders( BASIC_VERT_SHADER, BASIC_FRAG_SHADER );
 
 	// set up VAOs
 	glGenVertexArrays(1, &VAO);  
@@ -144,7 +138,11 @@ int render_loop()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw rectangle
-		glUseProgram(shader_program);
+		float time_value = (float)glfwGetTime();
+		float green_value = (sin(time_value) / 2.0f) + 0.5f;
+		//int vertex_color_location = glGetUniformLocation(shader.get_program(), "ourColor");
+		shader.use();
+		//glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);
 		glBindVertexArray(VAO);
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
