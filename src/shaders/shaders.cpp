@@ -61,9 +61,22 @@ void Shader::read_shader_file(char *path, char **source)
 	fopen_s(&fp, path, "r");
 	fseek(fp, 0L, SEEK_END);
 	int sz = ftell(fp);
-	rewind(fp);
+	int offset = 0;
+	int num_lines = 0;
+	fseek(fp, 0L, SEEK_SET);
 	*source = new char[sz];
-	fgets(*source, sz, (FILE*)fp); 
+	while( offset < sz - num_lines)
+	{
+		fgets(*source + offset, sz, (FILE*)fp);
+		num_lines++;
+		offset += strlen(*source) - offset;
+	}
+	fclose(fp);
+
+	FILE *test_fp;
+
+	fopen_s(&test_fp, VERT_SHADERS_LOCATION"test.txt", "w+");
+	fputs(*source, test_fp);
 	fclose(fp);
 }
 
