@@ -72,12 +72,6 @@ void Shader::read_shader_file(char *path, char **source)
 		offset += strlen(*source) - offset;
 	}
 	fclose(fp);
-
-	FILE *test_fp;
-
-	fopen_s(&test_fp, VERT_SHADERS_LOCATION"test.txt", "w+");
-	fputs(*source, test_fp);
-	fclose(fp);
 }
 
 void Shader::compile_shaders()
