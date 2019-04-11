@@ -20,12 +20,18 @@
 #define GEOM_SHADERS_LOCATION		SHADERS_LOCATION"geomtry_shaders/"
 #define FRAG_SHADERS_LOCATION		SHADERS_LOCATION"fragment_shaders/"
 
+#define GEN_ERROR_FILE
+#define SHADER_DEBUG_FILE_LOCATION			PROJECT_OUTPUT_DIR"shader_error_log"
+
 #define VERT_SHADER_FILE_EXTENSION		"vert"
 #define GEOM_SHADER_FILE_EXTENSION		"geom"
 #define FRAG_SHADER_FILE_EXTENSION		"frag"
 
 #define BASIC_VERT_SHADER		VERT_SHADERS_LOCATION"basic.vert\0"
 #define BASIC_FRAG_SHADER		FRAG_SHADERS_LOCATION"basic.frag\0"
+
+// Uniforms
+#define FRAG_COLOR			"ourColor"
 
 /************************************
 * Types

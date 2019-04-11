@@ -140,9 +140,9 @@ int render_loop()
 		// draw rectangle
 		float time_value = (float)glfwGetTime();
 		float green_value = (sin(time_value) / 2.0f) + 0.5f;
-		//int vertex_color_location = glGetUniformLocation(shader.get_program(), "ourColor");
+		int vertex_color_location = glGetUniformLocation(shader.get_program(), FRAG_COLOR);
 		shader.use();
-		//glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);
+		glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);
 		glBindVertexArray(VAO);
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

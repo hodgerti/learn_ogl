@@ -111,7 +111,13 @@ void Shader::check_shader_compile(unsigned int shader)
 	if(!success)
 	{
 		glGetShaderInfoLog(shader, 512, NULL, info_log);
-		std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << info_log << std::endl;
+		#ifdef GEN_ERROR_FILE
+		FILE *fp;
+		fopen_s(&fp, SHADER_DEBUG_FILE_LOCATION, "a");
+		fputs("\nERROR::SHADER::COMPILATION_FAILED\n", fp);
+		fputs(info_log, fp);
+		fclose(fp);
+		#endif
 	}
 }
 
@@ -123,7 +129,13 @@ void Shader::check_shader_program(unsigned int program)
 	if(!success)
 	{
 		glGetProgramInfoLog(program, 512, NULL, info_log);
-		std::cout << "ERROR::SHADER_PROGRAM::LINK_FAILED\n" << info_log << std::endl;
+		#ifdef GEN_ERROR_FILE
+		FILE *fp;
+		fopen_s(&fp, SHADER_DEBUG_FILE_LOCATION, "a");
+		fputs("\nERROR::SHADER_PROGRAM::LINK_FAILED\n", fp);
+		fputs(info_log, fp);
+		fclose(fp);
+		#endif
 	}
 }
 
