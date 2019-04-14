@@ -14,6 +14,7 @@
 * Constants
 *************************************/
 #define VERT_SHADER_LOCATION		0
+#define VERT_SHADER_COLOR			1
 
 #define SHADERS_LOCATION			PROJECT_DIR"../src/shaders/"
 #define VERT_SHADERS_LOCATION		SHADERS_LOCATION"vertex_shaders/"
