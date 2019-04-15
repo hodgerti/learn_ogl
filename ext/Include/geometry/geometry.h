@@ -8,6 +8,13 @@ static float triangle_vertices[] =
      0.0f,  0.5f, 0.0f
 }; 
 
+static float triangle_tex_coords[] = 
+{
+    0.0f, 0.0f,  // lower-left corner  
+    1.0f, 0.0f,  // lower-right corner
+    0.5f, 1.0f   // top-center corner
+};
+
 static float triangle_color_vertices[] = 
 {
     // positions         // colors

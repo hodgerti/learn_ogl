@@ -124,11 +124,13 @@
     <ClCompile Include="..\src\glfw_help\glfw_helper.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\shaders\shaders.cpp" />
+    <ClCompile Include="..\src\stb\stb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ext\Include\geometry\geometry.h" />
     <ClInclude Include="..\ext\Include\GLFW\glfw3.h" />
     <ClInclude Include="..\ext\Include\GLFW\glfw3native.h" />
+    <ClInclude Include="..\ext\Include\stb\stb_image.h" />
     <ClInclude Include="..\src\glfw_help\glfw_helper.h" />
     <ClInclude Include="..\src\shaders\shaders.h" />
   </ItemGroup>
