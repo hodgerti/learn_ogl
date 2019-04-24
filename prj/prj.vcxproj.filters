@@ -16,23 +16,20 @@
     <Filter Include="geometry">
       <UniqueIdentifier>{803f8284-8301-4ff6-ad0b-c33de4b74f12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders">
+    <Filter Include="src\textures">
+      <UniqueIdentifier>{2fc52f64-dbb0-4911-ae06-d6e523dd470a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\shaders">
       <UniqueIdentifier>{c93d28be-cac8-4338-878a-65d6c46c968f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\vertex_shaders">
+    <Filter Include="src\shaders\vertex_shaders">
       <UniqueIdentifier>{e4e3f50d-ffca-43ef-b21c-52edb9f9227b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\geometry_shaders">
+    <Filter Include="src\shaders\geometry_shaders">
       <UniqueIdentifier>{fd7a4089-57b0-4264-a556-30ffb00b9eaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\fragment_shaders">
+    <Filter Include="src\shaders\fragment_shaders">
       <UniqueIdentifier>{39b9dbd0-04a0-4ef9-b904-4f176e5b264d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="stb">
-      <UniqueIdentifier>{d8749fcf-0370-4d84-a0a7-d306179377a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\stb">
-      <UniqueIdentifier>{7a7c3c43-a805-4ede-8283-129bd34222d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,10 +43,13 @@
       <Filter>src\glfw_help</Filter>
     </ClCompile>
     <ClCompile Include="..\src\shaders\shaders.cpp">
-      <Filter>shaders</Filter>
+      <Filter>src\shaders</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\stb\stb.cpp">
-      <Filter>src\stb</Filter>
+    <ClCompile Include="..\src\textures\textures.cpp">
+      <Filter>src\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\textures\stb.cpp">
+      <Filter>src\textures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,18 +66,21 @@
       <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\src\shaders\shaders.h">
-      <Filter>shaders</Filter>
+      <Filter>src\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\textures\textures.h">
+      <Filter>src\textures</Filter>
     </ClInclude>
     <ClInclude Include="..\ext\Include\stb\stb_image.h">
-      <Filter>stb</Filter>
+      <Filter>src\textures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\shaders\vertex_shaders\basic.vert">
-      <Filter>shaders\vertex_shaders</Filter>
+      <Filter>src\shaders\vertex_shaders</Filter>
     </None>
     <None Include="..\src\shaders\fragment_shaders\basic.frag">
-      <Filter>shaders\fragment_shaders</Filter>
+      <Filter>src\shaders\fragment_shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

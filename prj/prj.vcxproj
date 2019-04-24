@@ -124,7 +124,8 @@
     <ClCompile Include="..\src\glfw_help\glfw_helper.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\shaders\shaders.cpp" />
-    <ClCompile Include="..\src\stb\stb.cpp" />
+    <ClCompile Include="..\src\textures\stb.cpp" />
+    <ClCompile Include="..\src\textures\textures.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ext\Include\geometry\geometry.h" />
@@ -133,6 +134,7 @@
     <ClInclude Include="..\ext\Include\stb\stb_image.h" />
     <ClInclude Include="..\src\glfw_help\glfw_helper.h" />
     <ClInclude Include="..\src\shaders\shaders.h" />
+    <ClInclude Include="..\src\textures\textures.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\shaders\fragment_shaders\basic.frag" />

@@ -5,12 +5,13 @@
 /************************************
 * Headers
 *************************************/
+#include <glfw_help/glfw_helper.h>
+#include <shaders/shaders.h>
+#include <textures/textures.h>
+
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
-#include <glfw_help/glfw_helper.h>
 #include <geometry/geometry.h>
-#include <shaders/shaders.h>
-#include <stb/stb_image.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -29,7 +30,8 @@
 #define RESOURCES_FOLDER		"D:/Documents/learn_ogl/learn_ogl_resources/"
 #define TEXTURES_FOLDER			RESOURCES_FOLDER"textures/"
 
-#define CONTAINER_TEX			TEXTURES_FOLDER"container.jpg"
+#define CONTAINER_TEX_DIFF		TEXTURES_FOLDER"container.jpg"
+#define AWESOMEFACE_TEX_DIFF	TEXTURES_FOLDER"awesomeface.png"
 
 /************************************
 * Global variables
@@ -37,8 +39,9 @@
 GLFWwindow			*window;
 GLFWInputHandler	input_handler;
 Shader			    shader;
+Texture				container_tex_diff, awesomeface_tex_diff;
 unsigned int		VBO, EBO, VAO;
-unsigned int		container_tex;
+
 
 /************************************
 * Callbacks
@@ -119,26 +122,29 @@ int init()
 	glBindBuffer(GL_ARRAY_BUFFER, 0); 
 
 	// load textures
-	glGenTextures(1, &container_tex);
-	glBindTexture(GL_TEXTURE_2D, container_tex);
+	container_tex_diff.set_target(GL_TEXTURE_2D);
+	container_tex_diff.set_unit(GL_TEXTURE0);
+	container_tex_diff.add_parameteri(GL_TEXTURE_WRAP_S, GL_REPEAT);
+	container_tex_diff.add_parameteri(GL_TEXTURE_WRAP_T, GL_REPEAT);
+	container_tex_diff.add_parameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	container_tex_diff.add_parameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	container_tex_diff.load(CONTAINER_TEX_DIFF);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	awesomeface_tex_diff.set_target(GL_TEXTURE_2D);
+	awesomeface_tex_diff.set_unit(GL_TEXTURE1);
+	awesomeface_tex_diff.add_parameteri(GL_TEXTURE_WRAP_S, GL_REPEAT);
+	awesomeface_tex_diff.add_parameteri(GL_TEXTURE_WRAP_T, GL_REPEAT);
+	awesomeface_tex_diff.add_parameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	awesomeface_tex_diff.add_parameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	awesomeface_tex_diff.load(AWESOMEFACE_TEX_DIFF);
 
-	int tex_width, tex_height, nr_channels;
-	unsigned char *data = stbi_load(CONTAINER_TEX, &tex_width, &tex_height, &nr_channels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex_width, tex_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		return -1;
-	}
-	stbi_image_free(data);
+	shader.use();
+	glUniform1i(glGetUniformLocation(shader.get_program(), 
+									 TEX_UNIFORM_0), 
+									 get_tex_unit_num(container_tex_diff.get_unit()));
+	glUniform1i(glGetUniformLocation(shader.get_program(), 
+									 TEX_UNIFORM_1), 
+									 get_tex_unit_num(awesomeface_tex_diff.get_unit()));
 
 	return 0;
 }
@@ -173,8 +179,10 @@ int render_loop()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw
+		container_tex_diff.use();
+		awesomeface_tex_diff.use();
 		shader.use();
-		glBindTexture(GL_TEXTURE_2D, container_tex);
+
 		glBindVertexArray(VAO);
 		// glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

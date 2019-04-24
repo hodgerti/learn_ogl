@@ -13,10 +13,12 @@
 /************************************
 * Constants
 *************************************/
+// layouts
 #define VERT_SHADER_LOCATION		0
 #define VERT_SHADER_COLOR			1
 #define VERT_SHADER_TEX_COORD		2
 
+// shader locations
 #define SHADERS_LOCATION			PROJECT_DIR"../src/shaders/"
 #define VERT_SHADERS_LOCATION		SHADERS_LOCATION"vertex_shaders/"
 #define GEOM_SHADERS_LOCATION		SHADERS_LOCATION"geomtry_shaders/"
@@ -42,36 +44,36 @@ class Shader
 {
 	private:
 
-	unsigned int vert;
-	unsigned int frag;
-	unsigned int program;
+		unsigned int vert;
+		unsigned int frag;
+		unsigned int program;
 
-	char *vert_path;
-	char *frag_path;
+		char *vert_path;
+		char *frag_path;
 
-	void compile_shaders();
+		void compile_shaders();
 
-	void link_shaders();
+		void link_shaders();
 
-	void read_shader_file(char *path, char **source);
+		void read_shader_file(char *path, char **source);
 
 	public:
 
-	Shader();
-	Shader(const char* vertex_path, const char* fragment_path);
+		Shader();
+		Shader(const char* vertex_path, const char* fragment_path);
 
-	~Shader();
+		~Shader();
 
-	void set_shaders(const char* vertex_path, const char* fragment_path);
+		void set_shaders(const char* vertex_path, const char* fragment_path);
 
-	void check_shader_compile(unsigned int shader);
-	void check_shader_program(unsigned int program);
+		void check_shader_compile(unsigned int shader);
+		void check_shader_program(unsigned int program);
 
-	void use();
+		void use();
 
-	unsigned int get_vert();
-	unsigned int get_frag();
-	unsigned int get_program();
+		unsigned int get_vert();
+		unsigned int get_frag();
+		unsigned int get_program();
 
 };
 

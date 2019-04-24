@@ -31,31 +31,37 @@ struct key_handle
 class GLFWInputHandler
 {
 	private:
-	GLFWwindow *window;
-	key_handle **keys;
-	int keys_sz;
+		GLFWwindow *window;
+		key_handle **keys;
+		int keys_sz;
 
-	void init_key(key_handle *key, int key_id, int key_name);
+		void init_key(key_handle *key, int key_id, int key_name);
 
 	public:
 
-	GLFWInputHandler();
-	GLFWInputHandler(GLFWwindow *in_window);
-	~GLFWInputHandler();
+		GLFWInputHandler();
+		GLFWInputHandler(GLFWwindow *in_window);
+		~GLFWInputHandler();
 
-	void set_window(GLFWwindow *in_window);
+		void set_window(GLFWwindow *in_window);
 
-	int  get_clicks(int key_id);
-	bool pop_click(int key_id);
-	int  clear_clicks(int key_id);
-	bool check_pressed(int key_id);
-	bool check_unpressed(int key_id);
+		// get number of times button has been clicked. Non-destructive.
+		int  get_clicks(int key_id);
+		// pop a click off total clicks if one exists. Destructive.
+		bool pop_click(int key_id);
+		// erase all clicks.
+		int  clear_clicks(int key_id);
 
-	void update();
-	// Add a key track
-	void add_key(int key_id, int key_name);
-	// Remove a key track. Doesn't unallocate any memory.
-	void remove_key(int key_id);
+		// check if button is pressed down
+		bool check_pressed(int key_id);
+		// check if button is not pressed down
+		bool check_unpressed(int key_id);
+
+		void update();
+		// Add a key track
+		void add_key(int key_id, int key_name);
+		// Remove a key track. Doesn't unallocate any memory.
+		void remove_key(int key_id);
 
 };
 
