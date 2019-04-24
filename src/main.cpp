@@ -33,6 +33,8 @@
 #define CONTAINER_TEX_DIFF		TEXTURES_FOLDER"container.jpg"
 #define AWESOMEFACE_TEX_DIFF	TEXTURES_FOLDER"awesomeface.png"
 
+#define TEX_MIX_INCR	0.05f
+
 /************************************
 * Global variables
 *************************************/
@@ -41,6 +43,7 @@ GLFWInputHandler	input_handler;
 Shader			    shader;
 Texture				container_tex_diff, awesomeface_tex_diff;
 unsigned int		VBO, EBO, VAO;
+float				tex_mix_amount = 0.0f;
 
 
 /************************************
@@ -65,6 +68,14 @@ void process_inputs()
 	if(input_handler.get_clicks(GLFW_KEY_P) > 4)
 	{
 		glfwSetWindowShouldClose(window, true);
+	}
+	if(input_handler.pop_click(GLFW_KEY_W))
+	{
+		tex_mix_amount += TEX_MIX_INCR;
+	}
+	if(input_handler.pop_click(GLFW_KEY_S))
+	{
+		tex_mix_amount -= TEX_MIX_INCR;
 	}
 }
 
@@ -97,6 +108,8 @@ int init()
 	input_handler.set_window(window);
 	input_handler.add_key(GLFW_KEY_ESCAPE, GLFW_KEY_ESCAPE);
 	input_handler.add_key(GLFW_KEY_P, GLFW_KEY_P);
+	input_handler.add_key(GLFW_KEY_W, GLFW_KEY_W);
+	input_handler.add_key(GLFW_KEY_S, GLFW_KEY_S);
 
 	// set up shaders
 	shader.set_shaders( BASIC_VERT_SHADER, BASIC_FRAG_SHADER );
@@ -122,6 +135,8 @@ int init()
 	glBindBuffer(GL_ARRAY_BUFFER, 0); 
 
 	// load textures
+	stbi_set_flip_vertically_on_load(true);
+
 	container_tex_diff.set_target(GL_TEXTURE_2D);
 	container_tex_diff.set_unit(GL_TEXTURE0);
 	container_tex_diff.add_parameteri(GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -179,6 +194,8 @@ int render_loop()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw
+		glUniform1f(glGetUniformLocation(shader.get_program(), TEX_MIX_UNIFORM), tex_mix_amount);
+		
 		container_tex_diff.use();
 		awesomeface_tex_diff.use();
 		shader.use();

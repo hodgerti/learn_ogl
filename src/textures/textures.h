@@ -15,6 +15,8 @@
 #define EXTRA_PARAMETERI_S_SZ		1
 #define NO_PARAMETER				-1
 
+#define TEX_MIX_UNIFORM		"tex_mix"
+
 // texture uniform naming
 #define TEX_UNIFORM_BASE_NAME		"tex"
 #define TEX_UNIFORM_0				TEX_UNIFORM_BASE_NAME"0"
