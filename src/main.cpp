@@ -8,10 +8,14 @@
 #include <glfw_help/glfw_helper.h>
 #include <shaders/shaders.h>
 #include <textures/textures.h>
+#include <transform/transform.h>
 
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 #include <geometry/geometry.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -192,6 +196,9 @@ int render_loop()
 		// clear
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// transform
+		glm::vec4 transformed = transform(1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 2.0f, 20.0f);
 
 		// draw
 		glUniform1f(glGetUniformLocation(shader.get_program(), TEX_MIX_UNIFORM), tex_mix_amount);

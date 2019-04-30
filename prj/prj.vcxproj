@@ -126,6 +126,7 @@
     <ClCompile Include="..\src\shaders\shaders.cpp" />
     <ClCompile Include="..\src\textures\stb.cpp" />
     <ClCompile Include="..\src\textures\textures.cpp" />
+    <ClCompile Include="..\src\transform\transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ext\Include\geometry\geometry.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="..\src\glfw_help\glfw_helper.h" />
     <ClInclude Include="..\src\shaders\shaders.h" />
     <ClInclude Include="..\src\textures\textures.h" />
+    <ClInclude Include="..\src\transform\transform.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\shaders\fragment_shaders\basic.frag" />
