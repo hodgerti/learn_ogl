@@ -8,14 +8,14 @@
 #include <glfw_help/glfw_helper.h>
 #include <shaders/shaders.h>
 #include <textures/textures.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <transform/transform.h>
 
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 #include <geometry/geometry.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -198,7 +198,13 @@ int render_loop()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// transform
-		glm::vec4 transformed = transform(1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 2.0f, 20.0f);
+		glm::vec4 transformed = transform_my(1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 2.0f, 20.0f);
+		glm::mat4 trans_mat = glm::mat4(1.0f);
+		trans_mat = glm::rotate(trans_mat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		trans_mat = glm::scale(trans_mat, glm::vec3(0.5, 0.5, 0.5));  
+		unsigned int trans_loc = glGetUniformLocation(shader.get_program(), TRANSFORM_UNIFORM);
+		glUniformMatrix4fv(trans_loc, 1, GL_FALSE, glm::value_ptr(trans_mat));
+
 
 		// draw
 		glUniform1f(glGetUniformLocation(shader.get_program(), TEX_MIX_UNIFORM), tex_mix_amount);
