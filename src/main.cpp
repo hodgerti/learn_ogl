@@ -197,14 +197,25 @@ int render_loop()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// transform
-		glm::vec4 transformed = transform_my(1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 2.0f, 20.0f);
-		glm::mat4 trans_mat = glm::mat4(1.0f);
-		trans_mat = glm::rotate(trans_mat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		trans_mat = glm::scale(trans_mat, glm::vec3(0.5, 0.5, 0.5));  
-		unsigned int trans_loc = glGetUniformLocation(shader.get_program(), TRANSFORM_UNIFORM);
-		glUniformMatrix4fv(trans_loc, 1, GL_FALSE, glm::value_ptr(trans_mat));
+		// make coordinate matrices
+		//glm::vec4 transformed = transform_my(1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 2.0f, 20.0f);
+		//glm::mat4 trans_mat = glm::mat4(1.0f);
+		//trans_mat = glm::rotate(trans_mat, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		//trans_mat = glm::scale(trans_mat, glm::vec3(0.5, 0.5, 0.5));  
+		glm::mat4 model			= glm::mat4(1.0f);
+		glm::mat4 view			= glm::mat4(1.0f);
+		glm::mat4 projection	= glm::mat4(1.0f);
 
+		model =			glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		view =			glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		projection =	glm::perspective(glm::radians(45.0f), (float)(WINDOW_WIDTH/WINDOW_HEIGHT), 0.1f, 100.0f);
+		
+		unsigned int uniform_loc = glGetUniformLocation(shader.get_program(), MODEL_MAT_UNIFORM);
+		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(model));
+		uniform_loc = glGetUniformLocation(shader.get_program(), VIEW_MAT_UNIFORM);
+		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(view));
+		uniform_loc = glGetUniformLocation(shader.get_program(), PROJECTION_UNIFORM);
+		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
 		// draw
 		glUniform1f(glGetUniformLocation(shader.get_program(), TEX_MIX_UNIFORM), tex_mix_amount);

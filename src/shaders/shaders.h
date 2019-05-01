@@ -18,9 +18,6 @@
 #define VERT_SHADER_COLOR			1
 #define VERT_SHADER_TEX_COORD		2
 
-// uniforms
-#define  TRANSFORM_UNIFORM	"transform"
-
 // shader locations
 #define SHADERS_LOCATION			PROJECT_DIR"../src/shaders/"
 #define VERT_SHADERS_LOCATION		SHADERS_LOCATION"vertex_shaders/"
@@ -38,7 +35,10 @@
 #define BASIC_FRAG_SHADER		FRAG_SHADERS_LOCATION"basic.frag\0"
 
 // Uniforms
-#define FRAG_COLOR			"ourColor"
+#define FRAG_COLOR				"ourColor"
+#define MODEL_MAT_UNIFORM		"model"
+#define VIEW_MAT_UNIFORM		"view"
+#define PROJECTION_UNIFORM		"projection"
 
 /************************************
 * Types
