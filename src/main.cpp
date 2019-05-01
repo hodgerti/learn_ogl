@@ -40,6 +40,14 @@
 #define TEX_MIX_INCR	0.05f
 
 /************************************
+* Macros
+*************************************/
+#define min(a,b)		(((a)<(b))?(a):(b))
+#define max(a,b)		(((a)>(b))?(a):(b))
+#define clamp(c,a,b)	(max((a),min((c),(b))))
+
+
+/************************************
 * Global variables
 *************************************/
 GLFWwindow			*window;
@@ -48,6 +56,11 @@ Shader			    shader;
 Texture				container_tex_diff, awesomeface_tex_diff;
 unsigned int		VBO, EBO, VAO;
 float				tex_mix_amount = 0.0f;
+float				camera_speed = 0.02f;
+float				camera_speed_inc_amount = 0.001f;
+glm::vec3 pos_view   = glm::vec3(0.0f, 0.0f,  3.0f);
+glm::vec3 front_view = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 up_view    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 
 /************************************
@@ -57,7 +70,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 } 
-
 
 /*-----------------------------
 - Process inputs
@@ -73,14 +85,31 @@ void process_inputs()
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
-	if(input_handler.pop_click(GLFW_KEY_W))
+	if(input_handler.check_pressed(GLFW_KEY_W))
 	{
-		tex_mix_amount += TEX_MIX_INCR;
+		pos_view += camera_speed * front_view;
 	}
-	if(input_handler.pop_click(GLFW_KEY_S))
+	if(input_handler.check_pressed(GLFW_KEY_A))
 	{
-		tex_mix_amount -= TEX_MIX_INCR;
+		pos_view -= glm::normalize(glm::cross(front_view, up_view)) * camera_speed;
 	}
+	if(input_handler.check_pressed(GLFW_KEY_S))
+	{
+		pos_view -= camera_speed * front_view;
+	}
+	if(input_handler.check_pressed(GLFW_KEY_D))
+	{
+		pos_view += glm::normalize(glm::cross(front_view, up_view)) * camera_speed;
+	}
+	if(input_handler.pop_click(GLFW_KEY_UP))
+	{
+		camera_speed += camera_speed_inc_amount;
+	}
+	if(input_handler.pop_click(GLFW_KEY_DOWN))
+	{
+		camera_speed -= camera_speed_inc_amount;
+	}
+	camera_speed = clamp(camera_speed, camera_speed_inc_amount, 15.0f*camera_speed_inc_amount);
 }
 
 
@@ -113,7 +142,11 @@ int init()
 	input_handler.add_key(GLFW_KEY_ESCAPE, GLFW_KEY_ESCAPE);
 	input_handler.add_key(GLFW_KEY_P, GLFW_KEY_P);
 	input_handler.add_key(GLFW_KEY_W, GLFW_KEY_W);
+	input_handler.add_key(GLFW_KEY_A, GLFW_KEY_A);
 	input_handler.add_key(GLFW_KEY_S, GLFW_KEY_S);
+	input_handler.add_key(GLFW_KEY_D, GLFW_KEY_D);
+	input_handler.add_key(GLFW_KEY_UP, GLFW_KEY_UP);
+	input_handler.add_key(GLFW_KEY_DOWN, GLFW_KEY_DOWN);
 
 	// set OGL features
 	glEnable(GL_DEPTH_TEST);
@@ -196,19 +229,14 @@ int render_loop()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// view space
-		float radius = 10.0f;
-		float cam_x = sin(glfwGetTime()) * radius;
-		float cam_z = cos(glfwGetTime()) * radius;
-
-		glm::vec3 pos_view = glm::vec3(cam_x, 0.0f, cam_z);
-		glm::vec3 target_view = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec3 direction_view = glm::normalize(pos_view - target_view);
-		glm::vec3 up_world = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 right_view = glm::normalize(glm::cross(up_world, direction_view));  // opposite direction
-		glm::vec3 up_view = glm::cross(direction_view, right_view); 
+		//glm::vec3 target_view = glm::vec3(0.0f, 0.0f, 0.0f);
+		//glm::vec3 direction_view = glm::normalize(pos_view - target_view);
+		//glm::vec3 up_world = glm::vec3(0.0f, 1.0f, 0.0f);
+		//glm::vec3 right_view = glm::normalize(glm::cross(up_world, direction_view));  // opposite direction
+		//glm::vec3 up_view = glm::cross(direction_view, right_view); 
 
 		glm::mat4 view;
-		view = glm::lookAt(pos_view, target_view, up_view);
+		view = glm::lookAt(pos_view, pos_view + front_view, up_view);
 
 		unsigned int uniform_loc = glGetUniformLocation(shader.get_program(), VIEW_MAT_UNIFORM);
 		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(view));
