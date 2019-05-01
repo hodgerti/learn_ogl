@@ -128,7 +128,7 @@ int init()
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(square_box_vertices), square_box_vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(VERT_SHADER_LOCATION, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
 	glEnableVertexAttribArray(VERT_SHADER_LOCATION);
 	glVertexAttribPointer(VERT_SHADER_TEX_COORD, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
@@ -200,19 +200,16 @@ int render_loop()
 		//glm::mat4 trans_mat = glm::mat4(1.0f);
 		//trans_mat = glm::rotate(trans_mat, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 		//trans_mat = glm::scale(trans_mat, glm::vec3(0.5, 0.5, 0.5));  
-		glm::mat4 model			= glm::mat4(1.0f);
 		glm::mat4 view			= glm::mat4(1.0f);
 		glm::mat4 projection	= glm::mat4(1.0f);
 
-		model =			glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		view =			glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-		projection =	glm::perspective(glm::radians(45.0f), (float)(WINDOW_WIDTH/WINDOW_HEIGHT), 0.1f, 100.0f);
+		view	   = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
+		projection = glm::perspective(glm::radians(45.0f), (float)(WINDOW_WIDTH/WINDOW_HEIGHT), 0.1f, 100.0f);
 		
-		unsigned int uniform_loc = glGetUniformLocation(shader.get_program(), MODEL_MAT_UNIFORM);
-		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(model));
-		uniform_loc = glGetUniformLocation(shader.get_program(), VIEW_MAT_UNIFORM);
+		
+		unsigned int uniform_loc = glGetUniformLocation(shader.get_program(), VIEW_MAT_UNIFORM);
 		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(view));
-		uniform_loc = glGetUniformLocation(shader.get_program(), PROJECTION_UNIFORM);
+		uniform_loc = glGetUniformLocation(shader.get_program(), PROJECTION_MAT_UNIFORM);
 		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
 		// draw
@@ -223,8 +220,22 @@ int render_loop()
 		shader.use();
 
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		for( int idx = 0; idx < sizeof(cube_positions)/sizeof(glm::vec3); idx++ )
+		{
+			glm::mat4 model	= glm::mat4(1.0f);
+
+			model =	glm::translate(model, cube_positions[idx]);
+			model =	glm::rotate(model, 
+				                ((float)glfwGetTime() * glm::radians(50.0f)) + ((float)idx * 25.0f), 
+				                glm::vec3(1.0f+(1.0f/(float)(idx+1)), 0.3f+(1.5f/(float)(idx+1)), 0.5f+(3.0f/(float)(idx+1))));
+			
+			uniform_loc = glGetUniformLocation(shader.get_program(), MODEL_MAT_UNIFORM);
+			glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(model));
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		}
+		
 		glBindVertexArray(0);
 
 		

@@ -38,7 +38,7 @@
 #define FRAG_COLOR				"ourColor"
 #define MODEL_MAT_UNIFORM		"model"
 #define VIEW_MAT_UNIFORM		"view"
-#define PROJECTION_UNIFORM		"projection"
+#define PROJECTION_MAT_UNIFORM	"projection"
 
 /************************************
 * Types
