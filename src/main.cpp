@@ -91,7 +91,7 @@ void process_inputs()
 -------------------------------*/
 int init()
 {
-	// make the 
+	// make the window
 	window = start_glfw(WINDOW_WIDTH, WINDOW_HEIGHT, CONTEXT_TITLE);
 	if(window == NULL)
 	{
@@ -115,6 +115,9 @@ int init()
 	input_handler.add_key(GLFW_KEY_W, GLFW_KEY_W);
 	input_handler.add_key(GLFW_KEY_S, GLFW_KEY_S);
 
+	// set OGL features
+	glEnable(GL_DEPTH_TEST);
+
 	// set up shaders
 	shader.set_shaders( BASIC_VERT_SHADER, BASIC_FRAG_SHADER );
 
@@ -122,18 +125,13 @@ int init()
 	glGenVertexArrays(1, &VAO);  
 
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle_vertices), rectangle_vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangle_indices), rectangle_indices, GL_STATIC_DRAW);
-	glVertexAttribPointer(VERT_SHADER_LOCATION, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(square_box_vertices), square_box_vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(VERT_SHADER_LOCATION, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
 	glEnableVertexAttribArray(VERT_SHADER_LOCATION);
-	glVertexAttribPointer(VERT_SHADER_COLOR, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
-	glEnableVertexAttribArray(VERT_SHADER_COLOR);
-	glVertexAttribPointer(VERT_SHADER_TEX_COORD, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
+	glVertexAttribPointer(VERT_SHADER_TEX_COORD, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
 	glEnableVertexAttribArray(VERT_SHADER_TEX_COORD);
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); 
@@ -195,7 +193,7 @@ int render_loop()
 
 		// clear
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// make coordinate matrices
 		//glm::vec4 transformed = transform_my(1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 2.0f, 20.0f);
@@ -206,7 +204,7 @@ int render_loop()
 		glm::mat4 view			= glm::mat4(1.0f);
 		glm::mat4 projection	= glm::mat4(1.0f);
 
-		model =			glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model =			glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 		view =			glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 		projection =	glm::perspective(glm::radians(45.0f), (float)(WINDOW_WIDTH/WINDOW_HEIGHT), 0.1f, 100.0f);
 		
@@ -225,8 +223,8 @@ int render_loop()
 		shader.use();
 
 		glBindVertexArray(VAO);
-		// glDrawArrays(GL_TRIANGLES, 0, 6);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		
