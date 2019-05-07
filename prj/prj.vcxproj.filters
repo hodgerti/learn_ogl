@@ -37,6 +37,9 @@
     <Filter Include="src\delta_time">
       <UniqueIdentifier>{13372679-6cec-4567-9740-f8ee0fb4fe30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\camera">
+      <UniqueIdentifier>{30048718-2ced-4bc7-8b20-dee4fb247d5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -62,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="..\src\delta_time\delta_time.cpp">
       <Filter>src\delta_time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\camera\camera.cpp">
+      <Filter>src\camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="..\src\delta_time\delta_time.h">
       <Filter>src\delta_time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\camera\camera.h">
+      <Filter>src\camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

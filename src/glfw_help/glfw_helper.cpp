@@ -153,6 +153,10 @@ void GLFWInputHandler::update()
 		}
 		keys[i]->pressed = press_result == GLFW_PRESS;
 	}
+	double x_pos, y_pos;
+	glfwGetCursorPos(window, &x_pos, &y_pos);
+	mouse_pos.x = x_pos;
+	mouse_pos.y = y_pos;
 }
 
 void GLFWInputHandler::init_key(key_handle *key, int key_id, int key_name)
@@ -204,8 +208,7 @@ void GLFWInputHandler::remove_key(int key_id)
 void GLFWInputHandler::start_mouse(void)
 {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
-	glfwSetCursorPosCallback(window, mouse_callback);
-
+	//glfwSetCursorPosCallback(window, mouse_callback);
 }
 
 // callbacks
@@ -216,28 +219,10 @@ void GLFWInputHandler::framebuffer_size_callback(GLFWwindow* window, int width, 
 
 void GLFWInputHandler::mouse_callback(GLFWwindow* window, double x_pos, double y_pos)
 {
-	float x_offset = x_pos - last_x;
-	float y_offset = y_pos - last_y;
-	last_x = x_pos;
-	last_y = y_pos;
-
-	yaw   += x_offset * sensitivity;
-	pitch -= y_offset * sensitivity; 
-
-	pitch = clamp(pitch, MIN_PITCH, MAX_PITCH);
-
-	front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-	front.y = sin(glm::radians(pitch));
-	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-	front = glm::normalize(front);
+	//mouse_pos = glm::vec2(x_pos, y_pos);
 }
 
 /************************************
 * Initialize static class members
 *************************************/
-float GLFWInputHandler::last_x	= -1.0f;
-float GLFWInputHandler::last_y	= -1.0f;
-float GLFWInputHandler::pitch	= 0.0f;
-float GLFWInputHandler::yaw		= 0.0f;
-float GLFWInputHandler::sensitivity = DFLT_MOUSE_SENSITIVITY;
-glm::vec3 GLFWInputHandler::front = DFLT_FRONT;
+//glm::vec2 GLFWInputHandler::mouse_pos;

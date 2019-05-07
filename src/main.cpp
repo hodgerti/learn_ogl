@@ -5,6 +5,7 @@
 /************************************
 * Headers
 *************************************/
+#include <camera/camera.h>
 #include <delta_time/delta_time.h>
 #include <glfw_help/glfw_helper.h>
 #include <shaders/shaders.h>
@@ -53,15 +54,11 @@
 *************************************/
 GLFWInputHandler	input_handler;
 Shader			    shader;
+Camera				camera;
 Texture				container_tex_diff, awesomeface_tex_diff;
 DeltaTime			delta_time(glfwGetTime);
 unsigned int		VBO, EBO, VAO;
 float				tex_mix_amount = 0.0f;
-float				camera_speed = 5.0f;
-float				camera_speed_inc_amount = 1.1f;
-glm::vec3 pos_view   = glm::vec3(0.0f, 0.0f,  3.0f);
-glm::vec3 front_view = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 up_view    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 
 /************************************
@@ -74,9 +71,9 @@ glm::vec3 up_view    = glm::vec3(0.0f, 1.0f,  0.0f);
 -------------------------------*/
 void process_inputs()
 {
-	float local_camera_speed = camera_speed * delta_time.delta_time;
-	front_view = input_handler.front;
 	input_handler.update();
+	camera.update();
+	camera.set_mouse(input_handler.mouse_pos);
 	if(input_handler.check_pressed(GLFW_KEY_ESCAPE))
 	{
 		glfwSetWindowShouldClose(input_handler.window, true);
@@ -87,32 +84,33 @@ void process_inputs()
 	}
 	if(input_handler.check_pressed(GLFW_KEY_W))
 	{
-		pos_view += local_camera_speed * front_view;
+		camera.move_forward();
 	}
 	if(input_handler.check_pressed(GLFW_KEY_A))
 	{
-		pos_view -= glm::normalize(glm::cross(front_view, up_view)) * local_camera_speed;
+		camera.move_left();
 	}
 	if(input_handler.check_pressed(GLFW_KEY_S))
 	{
-		pos_view -= local_camera_speed * front_view;
+		camera.move_backwards();
 	}
 	if(input_handler.check_pressed(GLFW_KEY_D))
 	{
-		pos_view += glm::normalize(glm::cross(front_view, up_view)) * local_camera_speed;
+		camera.move_right();
 	}
 	if(input_handler.pop_click(GLFW_KEY_UP))
 	{
-		camera_speed += camera_speed_inc_amount;
+		camera.move_speed	+= DFLT_MOVE_SPEED_INCR;
+		camera.strafe_speed += DFLT_STRAFE_SPEED_INCR;
 	}
 	if(input_handler.pop_click(GLFW_KEY_DOWN))
 	{
-		camera_speed -= camera_speed_inc_amount;
+		camera.move_speed	-= DFLT_MOVE_SPEED_INCR;
+		camera.strafe_speed -= DFLT_STRAFE_SPEED_INCR;
 	}
-	camera_speed = clamp(camera_speed, camera_speed_inc_amount, 15.0f*camera_speed_inc_amount);
+	camera.move_speed	= clamp(camera.move_speed,   0.0, 15.0*DFLT_MOVE_SPEED_INCR);
+	camera.strafe_speed	= clamp(camera.strafe_speed, 0.0, 15.0*DFLT_STRAFE_SPEED_INCR);
 }
-
-
 
 /*-----------------------------
 - Initialize window/context
@@ -128,7 +126,6 @@ int init()
 	{
 		return -1;
 	}
-	
 	
 	// setup keys
 	input_handler.add_key(GLFW_KEY_ESCAPE, GLFW_KEY_ESCAPE);
@@ -190,6 +187,10 @@ int init()
 									 TEX_UNIFORM_1), 
 									 get_tex_unit_num(awesomeface_tex_diff.get_unit()));
 
+	// set up camera
+	camera.shader_id = shader.get_program();
+	camera.set_clip_perspective(45.0, WINDOW_WIDTH/WINDOW_HEIGHT, 0.1, 100.0);
+
 	return 0;
 }
 
@@ -212,10 +213,6 @@ int render_loop()
 {
 	while(!glfwWindowShouldClose(input_handler.window))
 	{
-	
-		// update delta time
-		delta_time.update();
-
 		// input
 		process_inputs();
 
@@ -226,27 +223,7 @@ int render_loop()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// view space
-		//glm::vec3 target_view = glm::vec3(0.0f, 0.0f, 0.0f);
-		//glm::vec3 direction_view = glm::normalize(pos_view - target_view);
-		//glm::vec3 up_world = glm::vec3(0.0f, 1.0f, 0.0f);
-		//glm::vec3 right_view = glm::normalize(glm::cross(up_world, direction_view));  // opposite direction
-		//glm::vec3 up_view = glm::cross(direction_view, right_view); 
-
-		glm::mat4 view;
-		view = glm::lookAt(pos_view, pos_view + front_view, up_view);
-
-		unsigned int uniform_loc = glGetUniformLocation(shader.get_program(), VIEW_MAT_UNIFORM);
-		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(view));
-
-		// clip space
-		glm::mat4 projection	= glm::mat4(1.0f);
-		projection = glm::perspective(glm::radians(45.0f), (float)(WINDOW_WIDTH/WINDOW_HEIGHT), 0.1f, 100.0f);
-		
-		uniform_loc = glGetUniformLocation(shader.get_program(), PROJECTION_MAT_UNIFORM);
-		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(projection));
-
-		// draw
+		// ---- draw
 		glUniform1f(glGetUniformLocation(shader.get_program(), TEX_MIX_UNIFORM), tex_mix_amount);
 		
 		container_tex_diff.use();
@@ -264,8 +241,9 @@ int render_loop()
 				                ((float)glfwGetTime() * glm::radians(50.0f)) + ((float)idx * 25.0f), 
 				                glm::vec3(1.0f+(1.0f/(float)(idx+1)), 0.3f+(1.5f/(float)(idx+1)), 0.5f+(3.0f/(float)(idx+1))));
 			
-			uniform_loc = glGetUniformLocation(shader.get_program(), MODEL_MAT_UNIFORM);
-			glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(model));
+			camera.set_world(model);
+
+			camera.use();
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 			// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

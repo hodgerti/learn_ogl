@@ -21,11 +21,7 @@
 *************************************/
 #define DFLT_KEYS_SIZE		16
 #define NO_KEY_ID			-1
-#define DFLT_MOUSE_SENSITIVITY			0.09f
-#define DFLT_MOUSE_SENSITIVITY_INCR		0.001f
-#define DFLT_FRONT glm::vec3(0.0f, 0.0f, -1.0f);
-#define MAX_PITCH  89.9999f
-#define MIN_PITCH -89.9999f
+#define DFLT_MOUSEPOS glm::vec2(0.0, 0.0);
 #define MAX_YAW 
 #define MIN_YAW
 
@@ -53,20 +49,13 @@ class GLFWInputHandler
 		key_handle **keys;
 		int keys_sz;
 
-		// variables used in callbacks
-		static float last_x;
-		static float last_y;
-		static float pitch;
-		static float yaw;
-
 		void init_key(key_handle *key, int key_id, int key_name);
 
 	public:
 		GLFWwindow *window;
-		static glm::vec3 front;
 
 		// variables used in callbacks
-		static float sensitivity;
+		glm::vec2 mouse_pos;
 
 		GLFWInputHandler();
 		GLFWInputHandler(int w_width, int w_height, char *monitor, GLADloadproc load_proc);
@@ -97,8 +86,6 @@ class GLFWInputHandler
 		// callbacks
 		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 		static void mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
-
-
 };
 
 

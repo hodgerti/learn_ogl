@@ -120,6 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\camera\camera.cpp" />
     <ClCompile Include="..\src\delta_time\delta_time.cpp" />
     <ClCompile Include="..\src\glad\glad.c" />
     <ClCompile Include="..\src\glfw_help\glfw_helper.cpp" />
@@ -134,6 +135,7 @@
     <ClInclude Include="..\ext\Include\GLFW\glfw3.h" />
     <ClInclude Include="..\ext\Include\GLFW\glfw3native.h" />
     <ClInclude Include="..\ext\Include\stb\stb_image.h" />
+    <ClInclude Include="..\src\camera\camera.h" />
     <ClInclude Include="..\src\delta_time\delta_time.h" />
     <ClInclude Include="..\src\glfw_help\glfw_helper.h" />
     <ClInclude Include="..\src\shaders\shaders.h" />
