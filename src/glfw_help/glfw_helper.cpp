@@ -8,30 +8,41 @@
 *************************************/
 #include <glfw_help/glfw_helper.h>
 
+/************************************
+* Global variables
+*************************************/
 
 /************************************
 * Functions
 *************************************/
 
-GLFWwindow * start_glfw(int w_width, int w_height, char *monitor)
+int GLFWInputHandler::start_glfw(int w_width, int w_height, char *monitor, GLADloadproc load_proc)
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow *window = glfwCreateWindow(w_width, w_height, monitor, NULL, NULL);
+	window = glfwCreateWindow(w_width, w_height, monitor, NULL, NULL);
 	if (window == NULL)
 	{
 		printf("Failed to create GLFW window");
 		glfwTerminate();
-		return window;
+		return 0;
 	}
 	glfwMakeContextCurrent(window);
 
-	return window;
-}
+	if(!gladLoadGLLoader(load_proc))
+	{
+		return 0;
+	}
 
+	// set window resizing callback
+	glViewport(0, 0, w_width, w_height);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); 
+
+	return 1;
+}
 
 
 GLFWInputHandler::GLFWInputHandler()
@@ -47,10 +58,10 @@ GLFWInputHandler::GLFWInputHandler()
 	}
 }
 
-GLFWInputHandler::GLFWInputHandler(GLFWwindow *in_window)
+GLFWInputHandler::GLFWInputHandler(int w_width, int w_height, char *monitor, GLADloadproc load_proc)
 {
 	GLFWInputHandler();
-	window = in_window;
+	start_glfw(w_width, w_height, monitor, load_proc);
 }
 
 GLFWInputHandler::~GLFWInputHandler()
@@ -60,11 +71,6 @@ GLFWInputHandler::~GLFWInputHandler()
 		delete [] keys[i];
 	}
 	delete [] keys;
-}
-
-void GLFWInputHandler::set_window(GLFWwindow *in_window)
-{
-	window = in_window;
 }
 
 int GLFWInputHandler::clear_clicks(int key_id)
@@ -194,3 +200,44 @@ void GLFWInputHandler::remove_key(int key_id)
 		}
 	}
 }
+
+void GLFWInputHandler::start_mouse(void)
+{
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
+	glfwSetCursorPosCallback(window, mouse_callback);
+
+}
+
+// callbacks
+void GLFWInputHandler::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+} 
+
+void GLFWInputHandler::mouse_callback(GLFWwindow* window, double x_pos, double y_pos)
+{
+	float x_offset = x_pos - last_x;
+	float y_offset = y_pos - last_y;
+	last_x = x_pos;
+	last_y = y_pos;
+
+	yaw   += x_offset * sensitivity;
+	pitch -= y_offset * sensitivity; 
+
+	pitch = clamp(pitch, MIN_PITCH, MAX_PITCH);
+
+	front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+	front.y = sin(glm::radians(pitch));
+	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+	front = glm::normalize(front);
+}
+
+/************************************
+* Initialize static class members
+*************************************/
+float GLFWInputHandler::last_x	= -1.0f;
+float GLFWInputHandler::last_y	= -1.0f;
+float GLFWInputHandler::pitch	= 0.0f;
+float GLFWInputHandler::yaw		= 0.0f;
+float GLFWInputHandler::sensitivity = DFLT_MOUSE_SENSITIVITY;
+glm::vec3 GLFWInputHandler::front = DFLT_FRONT;

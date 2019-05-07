@@ -34,6 +34,9 @@
     <Filter Include="src\transform">
       <UniqueIdentifier>{dbf212f1-b140-4393-9a82-7a7139657697}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\delta_time">
+      <UniqueIdentifier>{13372679-6cec-4567-9740-f8ee0fb4fe30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="..\src\transform\transform.cpp">
       <Filter>src\transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\delta_time\delta_time.cpp">
+      <Filter>src\delta_time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="..\src\transform\transform.h">
       <Filter>src\transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\delta_time\delta_time.h">
+      <Filter>src\delta_time</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

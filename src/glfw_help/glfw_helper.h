@@ -9,10 +9,32 @@
 /************************************
 * Headers
 *************************************/
+#include <glm/glm.hpp>
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+
+/************************************
+* Definitions
+*************************************/
+#define DFLT_KEYS_SIZE		16
+#define NO_KEY_ID			-1
+#define DFLT_MOUSE_SENSITIVITY			0.09f
+#define DFLT_MOUSE_SENSITIVITY_INCR		0.001f
+#define DFLT_FRONT glm::vec3(0.0f, 0.0f, -1.0f);
+#define MAX_PITCH  89.9999f
+#define MIN_PITCH -89.9999f
+#define MAX_YAW 
+#define MIN_YAW
+
+/************************************
+* Macros
+*************************************/
+#define min(a,b)		(((a)<(b))?(a):(b))
+#define max(a,b)		(((a)>(b))?(a):(b))
+#define clamp(c,a,b)	(max((a),min((c),(b))))
 
 /************************************
 * Types
@@ -25,25 +47,32 @@ struct key_handle
 	bool			pressed;
 };
 
-#define DFLT_KEYS_SIZE		16
-#define NO_KEY_ID			-1
-
 class GLFWInputHandler
 {
 	private:
-		GLFWwindow *window;
 		key_handle **keys;
 		int keys_sz;
+
+		// variables used in callbacks
+		static float last_x;
+		static float last_y;
+		static float pitch;
+		static float yaw;
 
 		void init_key(key_handle *key, int key_id, int key_name);
 
 	public:
+		GLFWwindow *window;
+		static glm::vec3 front;
+
+		// variables used in callbacks
+		static float sensitivity;
 
 		GLFWInputHandler();
-		GLFWInputHandler(GLFWwindow *in_window);
+		GLFWInputHandler(int w_width, int w_height, char *monitor, GLADloadproc load_proc);
 		~GLFWInputHandler();
 
-		void set_window(GLFWwindow *in_window);
+		int start_glfw(int w_width, int w_height, char *monitor, GLADloadproc load_proc);
 
 		// get number of times button has been clicked. Non-destructive.
 		int  get_clicks(int key_id);
@@ -62,18 +91,20 @@ class GLFWInputHandler
 		void add_key(int key_id, int key_name);
 		// Remove a key track. Doesn't unallocate any memory.
 		void remove_key(int key_id);
+		// enable mouse
+		void start_mouse(void);
+
+		// callbacks
+		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+		static void mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
+
 
 };
+
 
 /************************************
 * Functions
 *************************************/
-
-/*-----------------------------
-- Starts a GLFW window
--------------------------------*/
-GLFWwindow *start_glfw(int w_width, int w_height, char *monitor);
-
 
 
 #endif

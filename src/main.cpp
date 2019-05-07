@@ -5,6 +5,7 @@
 /************************************
 * Headers
 *************************************/
+#include <delta_time/delta_time.h>
 #include <glfw_help/glfw_helper.h>
 #include <shaders/shaders.h>
 #include <textures/textures.h>
@@ -50,14 +51,14 @@
 /************************************
 * Global variables
 *************************************/
-GLFWwindow			*window;
 GLFWInputHandler	input_handler;
 Shader			    shader;
 Texture				container_tex_diff, awesomeface_tex_diff;
+DeltaTime			delta_time(glfwGetTime);
 unsigned int		VBO, EBO, VAO;
 float				tex_mix_amount = 0.0f;
-float				camera_speed = 0.02f;
-float				camera_speed_inc_amount = 0.001f;
+float				camera_speed = 5.0f;
+float				camera_speed_inc_amount = 1.1f;
 glm::vec3 pos_view   = glm::vec3(0.0f, 0.0f,  3.0f);
 glm::vec3 front_view = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 up_view    = glm::vec3(0.0f, 1.0f,  0.0f);
@@ -66,40 +67,39 @@ glm::vec3 up_view    = glm::vec3(0.0f, 1.0f,  0.0f);
 /************************************
 * Callbacks
 *************************************/
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-} 
+
 
 /*-----------------------------
 - Process inputs
 -------------------------------*/
 void process_inputs()
 {
+	float local_camera_speed = camera_speed * delta_time.delta_time;
+	front_view = input_handler.front;
 	input_handler.update();
 	if(input_handler.check_pressed(GLFW_KEY_ESCAPE))
 	{
-		glfwSetWindowShouldClose(window, true);
+		glfwSetWindowShouldClose(input_handler.window, true);
 	}
 	if(input_handler.get_clicks(GLFW_KEY_P) > 4)
 	{
-		glfwSetWindowShouldClose(window, true);
+		glfwSetWindowShouldClose(input_handler.window, true);
 	}
 	if(input_handler.check_pressed(GLFW_KEY_W))
 	{
-		pos_view += camera_speed * front_view;
+		pos_view += local_camera_speed * front_view;
 	}
 	if(input_handler.check_pressed(GLFW_KEY_A))
 	{
-		pos_view -= glm::normalize(glm::cross(front_view, up_view)) * camera_speed;
+		pos_view -= glm::normalize(glm::cross(front_view, up_view)) * local_camera_speed;
 	}
 	if(input_handler.check_pressed(GLFW_KEY_S))
 	{
-		pos_view -= camera_speed * front_view;
+		pos_view -= local_camera_speed * front_view;
 	}
 	if(input_handler.check_pressed(GLFW_KEY_D))
 	{
-		pos_view += glm::normalize(glm::cross(front_view, up_view)) * camera_speed;
+		pos_view += glm::normalize(glm::cross(front_view, up_view)) * local_camera_speed;
 	}
 	if(input_handler.pop_click(GLFW_KEY_UP))
 	{
@@ -120,25 +120,17 @@ void process_inputs()
 -------------------------------*/
 int init()
 {
+
 	// make the window
-	window = start_glfw(WINDOW_WIDTH, WINDOW_HEIGHT, CONTEXT_TITLE);
-	if(window == NULL)
+	if(!input_handler.start_glfw(
+			WINDOW_WIDTH, WINDOW_HEIGHT, CONTEXT_TITLE, 
+			(GLADloadproc)glfwGetProcAddress))
 	{
 		return -1;
 	}
-
-	// generate ogl function pointers
-	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		return -1;
-	}
-
-	// set window resizing callback
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); 
-
+	
+	
 	// setup keys
-	input_handler.set_window(window);
 	input_handler.add_key(GLFW_KEY_ESCAPE, GLFW_KEY_ESCAPE);
 	input_handler.add_key(GLFW_KEY_P, GLFW_KEY_P);
 	input_handler.add_key(GLFW_KEY_W, GLFW_KEY_W);
@@ -147,6 +139,8 @@ int init()
 	input_handler.add_key(GLFW_KEY_D, GLFW_KEY_D);
 	input_handler.add_key(GLFW_KEY_UP, GLFW_KEY_UP);
 	input_handler.add_key(GLFW_KEY_DOWN, GLFW_KEY_DOWN);
+
+	input_handler.start_mouse();
 
 	// set OGL features
 	glEnable(GL_DEPTH_TEST);
@@ -216,8 +210,12 @@ int stop()
 -------------------------------*/
 int render_loop()
 {
-	while(!glfwWindowShouldClose(window))
+	while(!glfwWindowShouldClose(input_handler.window))
 	{
+	
+		// update delta time
+		delta_time.update();
+
 		// input
 		process_inputs();
 
@@ -279,7 +277,7 @@ int render_loop()
 		// check if any events are triggered, call needed callbacks, and update window state
 		glfwPollEvents();
 		// swap color buffer
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(input_handler.window);
 	}
 
 	stop();
